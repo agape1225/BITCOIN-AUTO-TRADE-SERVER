@@ -8,6 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 from system.AI.lstm_machine import LstmMachine
 from db.mongodb.mongodb_handler import MongoDBHandler
+from machine.bithumb_machine import BithumbMachine
 
 app = Flask(__name__)
 
@@ -65,29 +66,37 @@ def model():
         35425000.0
     ]
 
-    db = MongoDBHandler("local", "AI", "predicted_data")
-    #db.set_db("AI", "predicted_data")
-    data = db.find_item()
-    print(data)
-    data = db.find_last_item()
-    print(data)
-    data = {"date": "2023-09-18", "price":35000000.0}
-    db.insert_item(data)
-    data = db.find_last_item()
-    print(data)
-    data = db.find_last_item()
-    print(data)
+    # db = MongoDBHandler("local", "AI", "predicted_data")
+    # #db.set_db("AI", "predicted_data")
+    # data = db.find_item()
+    # print(data)
+    # data = db.find_last_item()
+    # print(data)
+    # data = {"date": "2023-09-18", "price":35000000.0}
+    # db.insert_item(data)
+    # data = db.find_last_item()
+    # print(data)
+    # data = db.find_last_item()
+    # print(data)
 
     test_value.reverse()
 
     aiMachine = LstmMachine()
+    machine = BithumbMachine()
+    data = machine.get_local_data()
 
-    #data = aiMachine.data_processing(test_value)
-    #predicted_data = aiMachine.get_predict_value(data)
+    data = aiMachine.data_processing(data)
+    predicted_data = aiMachine.get_predict_value(data)
+    print(predicted_data)
+    return "예측값: " + str(predicted_data)
+    #return "예측값: " + str(data["price"])  
 
-    return "예측값: " + str(data["price"])  
+@app.route("/test_bithumb")
+def bithumb():
+    machine = BithumbMachine()
+    data = machine.get_local_data()
 
-
+    return data
 
 
 @app.route("/")
