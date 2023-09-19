@@ -48,23 +48,23 @@ def model():
     predicted = scaler.inverse_transform(predicted)
     print(predicted)"""
 
-    test_value = [
-        35268000.0,
-        35616000.0,
-        34978000.0,
-        35019000.0,
-        34951000.0,
-        35246000.0,
-        35142000.0,
-        35319000.0,
-        35442000.0,
-        37023000.0,
-        37354000.0,
-        35268000.0,
-        35355000.0,
-        35351000.0,
-        35425000.0
-    ]
+    # test_value = [
+    #     35268000.0,
+    #     35616000.0,
+    #     34978000.0,
+    #     35019000.0,
+    #     34951000.0,
+    #     35246000.0,
+    #     35142000.0,
+    #     35319000.0,
+    #     35442000.0,
+    #     37023000.0,
+    #     37354000.0,
+    #     35268000.0,
+    #     35355000.0,
+    #     35351000.0,
+    #     35425000.0
+    # ]
 
     # db = MongoDBHandler("local", "AI", "predicted_data")
     # #db.set_db("AI", "predicted_data")
@@ -79,7 +79,7 @@ def model():
     # data = db.find_last_item()
     # print(data)
 
-    test_value.reverse()
+    # test_value.reverse()
 
     aiMachine = LstmMachine()
     machine = BithumbMachine()
