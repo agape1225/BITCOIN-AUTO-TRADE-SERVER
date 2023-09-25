@@ -17,11 +17,6 @@ class BithumbMachine:
 
         headers = {"accept": "application/json"}
         response = requests.get(url, headers=headers)
-        #print(response.text)
-        #return response.text["data"][15]
-        
-        #print(response.text["data"])
         res = json.loads(response.text)
-        #return response.text["data"]
-        #return res["data"][-15:]
+
         return [[eval(sublist[2]) + 0.0] for sublist in res["data"][-15:]]
