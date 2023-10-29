@@ -9,6 +9,7 @@ import numpy as np
 from system.AI.lstm_machine import LstmMachine
 from db.mongodb.mongodb_handler import MongoDBHandler
 from machine.bithumb_machine import BithumbMachine
+from bson import json_util
 
 app = Flask(__name__)
 
@@ -129,5 +130,30 @@ def weather():
 
     return render_template("weather.html", weather={"city": city, "temp": temp[0].text, "desc": desc[0].text, "summary": summary[0].text})
 
+@app.route("/get_basic_chart")
+def get_basic_chart():
+    db = MongoDBHandler(db_name="AI", collection_name="actual_data")
+    data = db.find_items( db_name="AI", collection_name="actual_data")
+    # ret = []
+    # for i in data:
+    #     ret.append(json_util.loads(json_util.dumps(i)))
+    
+    #print(dict(list(data)))
+    
+    #data = {'host': '127.0.0.1', 'port': '8080'}
+
+    #print(list(data)[0])
+    #data = list(data)[0]
+    #del data["_id"]
+    ret = []
+    #list(data)
+    for i in data:
+        print(i)
+        del i["_id"]
+        ret.append(i)
+        #print(i)
+        #ret.append(i)
+
+    return ret
 
 app.run(debug=True)

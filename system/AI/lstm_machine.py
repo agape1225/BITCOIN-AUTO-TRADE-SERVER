@@ -43,8 +43,6 @@ class LstmMachine:
             tmp.append(i)
             final_data.append(tmp)
         
-        
-        
         final_data = self.scaler.fit_transform(
             np.array(final_data).reshape(-1, 1)
         )
@@ -52,5 +50,3 @@ class LstmMachine:
         final_data = np.array([final_data])
         
         return final_data 
-
-
