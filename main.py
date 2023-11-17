@@ -130,30 +130,58 @@ def weather():
 
     return render_template("weather.html", weather={"city": city, "temp": temp[0].text, "desc": desc[0].text, "summary": summary[0].text})
 
+@app.route("/get_predict_value")
+def get_predict_value():
+    db = MongoDBHandler(db_name="AI", collection_name="predicted_data")
+
+    data = db.find_last_item(db_name="AI", collection_name="predicted_data")
+    data['_id'] = str(data['_id'])
+    #print(data)
+
+    return data
+
 @app.route("/get_basic_chart")
 def get_basic_chart():
     db = MongoDBHandler(db_name="AI", collection_name="actual_data")
-    data = db.find_items( db_name="AI", collection_name="actual_data")
-    # ret = []
-    # for i in data:
-    #     ret.append(json_util.loads(json_util.dumps(i)))
-    
-    #print(dict(list(data)))
-    
-    #data = {'host': '127.0.0.1', 'port': '8080'}
+    actual_data = db.find_items_for_chart( db_name="AI", collection_name="actual_data", limit=14)
+    predicted_data = db.find_items_for_chart(db_name="AI", collection_name="predicted_data", limit=15)
 
-    #print(list(data)[0])
-    #data = list(data)[0]
-    #del data["_id"]
-    ret = []
-    #list(data)
-    for i in data:
+    actual_data_list = []
+    predicted_data_list = []
+    lables = []
+
+    for i in actual_data:
         print(i)
-        del i["_id"]
-        ret.append(i)
-        #print(i)
-        #ret.append(i)
+        #i["_id"] = str(i["_id"])
+        #del i["_id"]
+        actual_data_list.append(i["close_price"])
 
-    return ret
+    for i in predicted_data:
+        print(i)
+        #i["_id"] = str(i["_id"])
+        #del i["_id"]
+        lables.append(i["timestamp"])
+        predicted_data_list.append(i["predicted_price"])
+
+    chart_data = {}
+    actual_data_list.reverse()
+    predicted_data_list.reverse()
+    lables.reverse()
+
+    max_value = max(actual_data_list + predicted_data_list)
+    min_value = min(actual_data_list + predicted_data_list)
+
+    blank = (min_value + max_value) / 10
+    chart_data["max"] = max_value + blank
+    chart_data["min"] = min_value + blank
+    chart_data["label"] = lables
+    chart_data["datas"] = [
+        {"label" : "actual_data", "datas" : actual_data_list}, 
+        {"label" : "predicted_data", "datas" : predicted_data_list}]
+    
+    #chart_data["actual_data"] = [{"label" : "actual_data", "datas" : actual_data_list}, {"label" : "predicted_data", "datas" : predicted_data_list}]
+    #chart_data["predicted_data"] = predicted_data_list
+
+    return chart_data
 
 app.run(debug=True)
